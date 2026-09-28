@@ -1,12 +1,15 @@
 package com.example.pneumaticwaste.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
 import com.example.pneumaticwaste.model.SuctionCycle;
 import com.example.pneumaticwaste.repository.SuctionCycleRepository;
 import com.example.pneumaticwaste.repository.ZoneRepository;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class SuctionCycleService {
@@ -23,15 +26,16 @@ public class SuctionCycleService {
         return suctionCycleRepository.findAll();
     }
 
-    public SuctionCycle getSuctionCycleById(Long id) {
-        return suctionCycleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Suction cycle not found with id: " + id));
+    public @NonNull SuctionCycle getSuctionCycleById(@NonNull Long id) {
+        return Objects.requireNonNull(suctionCycleRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Suction cycle not found with id: " + id)));
     }
 
     // Creates an underground pneumatic suction operation simulation record
-    public SuctionCycle createSuctionCycle(SuctionCycle cycle) {
-        if (cycle.getZoneId() == null || !zoneRepository.existsById(cycle.getZoneId())) {
-            throw new RuntimeException("Zone not found with id: " + cycle.getZoneId());
+    public @NonNull SuctionCycle createSuctionCycle(@NonNull SuctionCycle cycle) {
+        Long zoneId = cycle.getZoneId();
+        if (zoneId == null || !zoneRepository.existsById(zoneId)) {
+            throw new RuntimeException("Zone not found with id: " + zoneId);
         }
         if (cycle.getTotalWasteKg() == null || cycle.getTotalWasteKg() < 0) {
             throw new RuntimeException("Total waste weight (kg) must be greater than or equal to 0");
@@ -48,7 +52,7 @@ public class SuctionCycleService {
         return suctionCycleRepository.save(cycle);
     }
 
-    public SuctionCycle updateSuctionCycle(Long id, SuctionCycle details) {
+    public @NonNull SuctionCycle updateSuctionCycle(@NonNull Long id, @NonNull SuctionCycle details) {
         SuctionCycle cycle = getSuctionCycleById(id);
         if (details.getZoneId() != null) {
             cycle.setZoneId(details.getZoneId());
