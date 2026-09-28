@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Pneumatic Waste Transport Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <header class="main-header">
+        <div class="header-container">
+            <h1>Urban Pneumatic Waste Hub</h1>
+            <p>Underground Pneumatic Waste Transportation & Financial Operations System</p>
+        </div>
+    </header>
+
+    <!-- Navigation Bar / Tabs -->
+    <nav class="tab-nav">
+        <button class="nav-tab active" onclick="switchTab('dashboard')">Dashboard</button>
+        <button class="nav-tab" onclick="switchTab('contacts')">Contacts</button>
+        <button class="nav-tab" onclick="switchTab('buildings')">Buildings</button>
+        <button class="nav-tab" onclick="switchTab('zones')">Zones</button>
+        <button class="nav-tab" onclick="switchTab('services')">Services</button>
+        <button class="nav-tab" onclick="switchTab('waste-collections')">Waste Collection</button>
+        <button class="nav-tab" onclick="switchTab('suction-cycles')">Suction Cycles</button>
+        <button class="nav-tab" onclick="switchTab('purchase-orders')">Purchase Orders</button>
+        <button class="nav-tab" onclick="switchTab('vendor-bills')">Vendor Bills</button>
+        <button class="nav-tab" onclick="switchTab('sales-orders')">Sales Orders</button>
+        <button class="nav-tab" onclick="switchTab('invoices')">Invoices</button>
+        <button class="nav-tab" onclick="switchTab('payments')">Payments</button>
+        <button class="nav-tab" onclick="switchTab('accounts')">Accounts</button>
+        <button class="nav-tab" onclick="switchTab('journal-entries')">Journal Entries</button>
+        <button class="nav-tab" onclick="switchTab('budgets')">Budgets</button>
+        <button class="nav-tab" onclick="switchTab('reports')">Reports</button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="content-container">
+
+        <!-- 1. DASHBOARD TAB -->
+        <section id="tab-dashboard" class="tab-content active">
+            <h2>System Overview Dashboard</h2>
+            <div class="card-grid">
+                <div class="stat-card">
+                    <h3>Total Waste Collected</h3>
+                    <p class="stat-value" id="dash-total-waste">0 KG</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Network Zones</h3>
+                    <p class="stat-value" id="dash-active-zones">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed Suction Cycles</h3>
+                    <p class="stat-value" id="dash-suction-cycles">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Customer Revenue</h3>
+                    <p class="stat-value" id="dash-revenue">₹0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Operating Expenses</h3>
+                    <p class="stat-value" id="dash-expenses">₹0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Net Profit</h3>
+                    <p class="stat-value" id="dash-net-profit">₹0.00</p>
+                </div>
+                <div class="stat-card warning-card">
+                    <h3>Unpaid Customer Invoices</h3>
+                    <p class="stat-value" id="dash-pending-invoices">0</p>
+                </div>
+                <div class="stat-card warning-card">
+                    <h3>Unpaid Vendor Bills</h3>
+                    <p class="stat-value" id="dash-pending-bills">0</p>
+                </div>
+            </div>
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="loadDashboard()">Refresh Dashboard</button>
+            </div>
+        </section>
+
+        <!-- 2. CONTACTS TAB -->
+        <section id="tab-contacts" class="tab-content">
+            <h2>Contacts Management</h2>
+            <div class="form-container">
+                <h3 id="contact-form-title">Add New Contact</h3>
+                <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                    <input type="hidden" id="contact-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-name">Name *</label>
+                            <input type="text" id="contact-name" required placeholder="ABC Commercial Complex">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-type">Contact Type *</label>
+                            <select id="contact-type" required>
+                                <option value="CUSTOMER">CUSTOMER</option>
+                                <option value="VENDOR">VENDOR</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-phone">Phone</label>
+                            <input type="text" id="contact-phone" placeholder="9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" placeholder="abc@example.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-address">Address</label>
+                        <input type="text" id="contact-address" placeholder="Coimbatore">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Contact</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetContactForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="contacts-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 3. BUILDINGS TAB -->
+        <section id="tab-buildings" class="tab-content">
+            <h2>Commercial Buildings</h2>
+            <div class="form-container">
+                <h3 id="building-form-title">Add New Building</h3>
+                <form id="building-form" onsubmit="handleBuildingSubmit(event)">
+                    <input type="hidden" id="building-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="building-name">Building Name *</label>
+                            <input type="text" id="building-name" required placeholder="ABC Commercial Complex">
+                        </div>
+                        <div class="form-group">
+                            <label for="building-address">Address</label>
+                            <input type="text" id="building-address" placeholder="Coimbatore">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="building-contact-id">Customer Contact ID *</label>
+                            <input type="number" id="building-contact-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="building-zone-id">Pneumatic Zone ID *</label>
+                            <input type="number" id="building-zone-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Building</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetBuildingForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Building Name</th>
+                        <th>Address</th>
+                        <th>Customer Contact ID</th>
+                        <th>Zone ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="buildings-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 4. ZONES TAB -->
+        <section id="tab-zones" class="tab-content">
+            <h2>Pneumatic Transport Zones</h2>
+            <div class="form-container">
+                <h3 id="zone-form-title">Add New Zone</h3>
+                <form id="zone-form" onsubmit="handleZoneSubmit(event)">
+                    <input type="hidden" id="zone-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zone-name">Zone Name *</label>
+                            <input type="text" id="zone-name" required placeholder="Commercial District Tube Zone A">
+                        </div>
+                        <div class="form-group">
+                            <label for="zone-status">Status *</label>
+                            <select id="zone-status" required>
+                                <option value="ACTIVE">ACTIVE</option>
+                                <option value="INACTIVE">INACTIVE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="zone-description">Description</label>
+                        <input type="text" id="zone-description" placeholder="Main commercial waste collection zone">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Zone</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetZoneForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Zone Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="zones-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 5. SERVICES TAB -->
+        <section id="tab-services" class="tab-content">
+            <h2>Pneumatic Network Services</h2>
+            <div class="form-container">
+                <h3 id="service-form-title">Add New Service</h3>
+                <form id="service-form" onsubmit="handleServiceSubmit(event)">
+                    <input type="hidden" id="service-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="service-name">Service Name *</label>
+                            <input type="text" id="service-name" required placeholder="Pneumatic Waste Removal">
+                        </div>
+                        <div class="form-group">
+                            <label for="service-type">Service Type *</label>
+                            <select id="service-type" required>
+                                <option value="WASTE_COLLECTION">WASTE_COLLECTION</option>
+                                <option value="RECYCLING_HANDLING">RECYCLING_HANDLING</option>
+                                <option value="COMPRESSOR_MAINTENANCE">COMPRESSOR_MAINTENANCE</option>
+                                <option value="PUMP_MAINTENANCE">PUMP_MAINTENANCE</option>
+                                <option value="MECHANICAL_MAINTENANCE">MECHANICAL_MAINTENANCE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="service-price">Price (₹) *</label>
+                            <input type="number" step="0.01" id="service-price" required placeholder="5.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="service-description">Description</label>
+                            <input type="text" id="service-description" placeholder="Commercial pneumatic waste collection service">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Service</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetServiceForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Type</th>
+                        <th>Price (₹)</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="services-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 6. WASTE COLLECTION TAB -->
+        <section id="tab-waste-collections" class="tab-content">
+            <h2>Waste Weight Collection Records</h2>
+            <div class="form-container">
+                <h3>Record Building Waste Measurement</h3>
+                <form id="waste-form" onsubmit="handleWasteSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="waste-building-id">Building ID *</label>
+                            <input type="number" id="waste-building-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="waste-zone-id">Zone ID *</label>
+                            <input type="number" id="waste-zone-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="waste-weight">Weight (KG) *</label>
+                            <input type="number" step="0.1" id="waste-weight" required placeholder="350.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="waste-type">Waste Type *</label>
+                            <select id="waste-type" required>
+                                <option value="GENERAL">GENERAL</option>
+                                <option value="ORGANIC">ORGANIC</option>
+                                <option value="RECYCLABLE">RECYCLABLE</option>
+                                <option value="MIXED">MIXED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="waste-date">Collection Date</label>
+                            <input type="date" id="waste-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="waste-status">Collection Status</label>
+                            <select id="waste-status">
+                                <option value="COLLECTED">COLLECTED</option>
+                                <option value="TRANSPORTED">TRANSPORTED</option>
+                                <option value="PROCESSED">PROCESSED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Record Waste Collection</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Building ID</th>
+                        <th>Zone ID</th>
+                        <th>Weight (KG)</th>
+                        <th>Waste Type</th>
+                        <th>Collection Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="waste-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 7. SUCTION CYCLES TAB -->
+        <section id="tab-suction-cycles" class="tab-content">
+            <h2>Underground Pneumatic Suction Cycles</h2>
+            <div class="form-container">
+                <h3>Schedule / Run Pneumatic Suction Operation</h3>
+                <form id="suction-form" onsubmit="handleSuctionSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="suction-zone-id">Zone ID *</label>
+                            <input type="number" id="suction-zone-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="suction-weight">Total Waste (KG) *</label>
+                            <input type="number" step="0.1" id="suction-weight" required placeholder="850.0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="suction-start">Start Time</label>
+                            <input type="datetime-local" id="suction-start">
+                        </div>
+                        <div class="form-group">
+                            <label for="suction-end">End Time</label>
+                            <input type="datetime-local" id="suction-end">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="suction-status">Operation Status *</label>
+                        <select id="suction-status" required>
+                            <option value="COMPLETED">COMPLETED</option>
+                            <option value="RUNNING">RUNNING</option>
+                            <option value="SCHEDULED">SCHEDULED</option>
+                            <option value="FAILED">FAILED</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Suction Cycle</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Zone ID</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Total Waste (KG)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="suction-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 8. PURCHASE ORDERS TAB -->
+        <section id="tab-purchase-orders" class="tab-content">
+            <h2>Maintenance Purchase Orders</h2>
+            <div class="form-container">
+                <h3 id="po-form-title">Create Purchase Order</h3>
+                <form id="po-form" onsubmit="handlePOSubmit(event)">
+                    <input type="hidden" id="po-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="po-vendor-id">Vendor ID *</label>
+                            <input type="number" id="po-vendor-id" required placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="po-service-id">Service ID *</label>
+                            <input type="number" id="po-service-id" required placeholder="3">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="po-description">Description</label>
+                            <input type="text" id="po-description" placeholder="Compressor servicing">
+                        </div>
+                        <div class="form-group">
+                            <label for="po-quantity">Quantity *</label>
+                            <input type="number" id="po-quantity" required value="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="po-amount">Amount (₹) *</label>
+                            <input type="number" step="0.01" id="po-amount" required placeholder="15000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="po-date">Order Date</label>
+                            <input type="date" id="po-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="po-status">Status</label>
+                            <select id="po-status">
+                                <option value="CREATED">CREATED</option>
+                                <option value="APPROVED">APPROVED</option>
+                                <option value="COMPLETED">COMPLETED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Purchase Order</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetPOForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vendor ID</th>
+                        <th>Service ID</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Amount (₹)</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="po-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 9. VENDOR BILLS TAB -->
+        <section id="tab-vendor-bills" class="tab-content">
+            <h2>Vendor Maintenance Bills</h2>
+            <div class="form-container">
+                <h3>Record Vendor Bill</h3>
+                <form id="vendor-bill-form" onsubmit="handleVendorBillSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vb-vendor-id">Vendor ID *</label>
+                            <input type="number" id="vb-vendor-id" required placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="vb-po-id">Purchase Order ID *</label>
+                            <input type="number" id="vb-po-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vb-description">Description</label>
+                            <input type="text" id="vb-description" placeholder="Compressor maintenance service">
+                        </div>
+                        <div class="form-group">
+                            <label for="vb-amount">Amount (₹) *</label>
+                            <input type="number" step="0.01" id="vb-amount" required placeholder="15000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="vb-date">Bill Date</label>
+                            <input type="date" id="vb-date">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Vendor Bill</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vendor ID</th>
+                        <th>PO ID</th>
+                        <th>Description</th>
+                        <th>Amount (₹)</th>
+                        <th>Bill Date</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="vb-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 10. SALES ORDERS TAB -->
+        <section id="tab-sales-orders" class="tab-content">
+            <h2>Commercial Waste Service Sales Orders</h2>
+            <div class="form-container">
+                <h3 id="so-form-title">Create Sales Order</h3>
+                <form id="so-form" onsubmit="handleSOSubmit(event)">
+                    <input type="hidden" id="so-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="so-customer-id">Customer ID *</label>
+                            <input type="number" id="so-customer-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="so-building-id">Building ID *</label>
+                            <input type="number" id="so-building-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="so-service-id">Service ID *</label>
+                            <input type="number" id="so-service-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="so-quantity">Quantity (KG) *</label>
+                            <input type="number" id="so-quantity" required placeholder="1000">
+                        </div>
+                        <div class="form-group">
+                            <label for="so-rate">Rate (₹/KG) *</label>
+                            <input type="number" step="0.01" id="so-rate" required placeholder="5.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="so-total">Total Amount (₹)</label>
+                            <input type="number" step="0.01" id="so-total" placeholder="Auto-calculated (5000.00)">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="so-date">Order Date</label>
+                            <input type="date" id="so-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="so-status">Status</label>
+                            <select id="so-status">
+                                <option value="CREATED">CREATED</option>
+                                <option value="COMPLETED">COMPLETED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Sales Order</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetSOForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer ID</th>
+                        <th>Building ID</th>
+                        <th>Service ID</th>
+                        <th>Quantity</th>
+                        <th>Rate (₹)</th>
+                        <th>Total Amount (₹)</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="so-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 11. INVOICES TAB -->
+        <section id="tab-invoices" class="tab-content">
+            <h2>Customer Invoices</h2>
+            <div class="form-container">
+                <h3>Create Customer Waste Invoice</h3>
+                <form id="invoice-form" onsubmit="handleInvoiceSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="inv-customer-id">Customer ID *</label>
+                            <input type="number" id="inv-customer-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="inv-so-id">Sales Order ID *</label>
+                            <input type="number" id="inv-so-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="inv-description">Description</label>
+                            <input type="text" id="inv-description" placeholder="Monthly pneumatic waste collection">
+                        </div>
+                        <div class="form-group">
+                            <label for="inv-quantity">Quantity (KG)</label>
+                            <input type="number" id="inv-quantity" placeholder="1000">
+                        </div>
+                        <div class="form-group">
+                            <label for="inv-amount">Amount (₹) *</label>
+                            <input type="number" step="0.01" id="inv-amount" required placeholder="5000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="inv-date">Invoice Date</label>
+                            <input type="date" id="inv-date">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Invoice</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer ID</th>
+                        <th>Sales Order ID</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Amount (₹)</th>
+                        <th>Invoice Date</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invoices-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 12. PAYMENTS TAB -->
+        <section id="tab-payments" class="tab-content">
+            <h2>Payment Transactions</h2>
+            <div class="form-container">
+                <h3>Record Direct Payment Transaction</h3>
+                <form id="payment-form" onsubmit="handlePaymentSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pay-contact-id">Contact ID *</label>
+                            <input type="number" id="pay-contact-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="pay-type">Payment Type *</label>
+                            <select id="pay-type" required>
+                                <option value="RECEIVED">RECEIVED (From Customer)</option>
+                                <option value="PAID">PAID (To Vendor)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pay-ref-type">Reference Type *</label>
+                            <select id="pay-ref-type" required>
+                                <option value="INVOICE">INVOICE</option>
+                                <option value="VENDOR_BILL">VENDOR_BILL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pay-ref-id">Reference ID *</label>
+                            <input type="number" id="pay-ref-id" required placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pay-amount">Amount (₹) *</label>
+                            <input type="number" step="0.01" id="pay-amount" required placeholder="5000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="pay-date">Payment Date</label>
+                            <input type="date" id="pay-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="pay-method">Payment Method</label>
+                            <select id="pay-method">
+                                <option value="BANK_TRANSFER">BANK_TRANSFER</option>
+                                <option value="CASH">CASH</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Record Payment</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Contact ID</th>
+                        <th>Payment Type</th>
+                        <th>Reference Type</th>
+                        <th>Reference ID</th>
+                        <th>Amount (₹)</th>
+                        <th>Payment Date</th>
+                        <th>Method</th>
+                    </tr>
+                </thead>
+                <tbody id="payments-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 13. ACCOUNTS TAB -->
+        <section id="tab-accounts" class="tab-content">
+            <h2>Chart of Accounts</h2>
+            <div class="form-container">
+                <h3 id="account-form-title">Add New Account</h3>
+                <form id="account-form" onsubmit="handleAccountSubmit(event)">
+                    <input type="hidden" id="account-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acc-code">Account Code *</label>
+                            <input type="text" id="acc-code" required placeholder="I001">
+                        </div>
+                        <div class="form-group">
+                            <label for="acc-name">Account Name *</label>
+                            <input type="text" id="acc-name" required placeholder="Commercial Pneumatic Waste Fees">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acc-type">Account Type *</label>
+                            <select id="acc-type" required>
+                                <option value="ASSET">ASSET</option>
+                                <option value="LIABILITY">LIABILITY</option>
+                                <option value="INCOME">INCOME</option>
+                                <option value="EXPENSE">EXPENSE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="acc-balance">Opening Balance (₹)</label>
+                            <input type="number" step="0.01" id="acc-balance" value="0.00">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Account</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetAccountForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Account Code</th>
+                        <th>Account Name</th>
+                        <th>Account Type</th>
+                        <th>Balance (₹)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="accounts-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 14. JOURNAL ENTRIES TAB -->
+        <section id="tab-journal-entries" class="tab-content">
+            <h2>Double-Entry Journal Entries</h2>
+            <div class="form-container">
+                <h3>Record Journal Entry</h3>
+                <form id="je-form" onsubmit="handleJESubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="je-date">Transaction Date</label>
+                            <input type="date" id="je-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="je-description">Description *</label>
+                            <input type="text" id="je-description" required placeholder="Customer payment for waste collection">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="je-debit-id">Debit Account ID *</label>
+                            <input type="number" id="je-debit-id" required placeholder="1 (Bank Account)">
+                        </div>
+                        <div class="form-group">
+                            <label for="je-credit-id">Credit Account ID *</label>
+                            <input type="number" id="je-credit-id" required placeholder="2 (Waste Fees Revenue)">
+                        </div>
+                        <div class="form-group">
+                            <label for="je-amount">Amount (₹) *</label>
+                            <input type="number" step="0.01" id="je-amount" required placeholder="5000.00">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Create Journal Entry</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Transaction Date</th>
+                        <th>Description</th>
+                        <th>Debit Account ID</th>
+                        <th>Credit Account ID</th>
+                        <th>Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="je-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 15. BUDGETS TAB -->
+        <section id="tab-budgets" class="tab-content">
+            <h2>Zone Operating Budgets</h2>
+            <div class="form-container">
+                <h3 id="budget-form-title">Create / Set Zone Budget</h3>
+                <form id="budget-form" onsubmit="handleBudgetSubmit(event)">
+                    <input type="hidden" id="budget-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bgt-zone-id">Zone ID *</label>
+                            <input type="number" id="bgt-zone-id" required placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="bgt-analytic">Analytic Account Name</label>
+                            <input type="text" id="bgt-analytic" placeholder="Pneumatic Network Zone A">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bgt-period">Period Name *</label>
+                            <input type="text" id="bgt-period" required placeholder="September 2026">
+                        </div>
+                        <div class="form-group">
+                            <label for="bgt-planned">Planned Amount (₹) *</label>
+                            <input type="number" step="0.01" id="bgt-planned" required placeholder="100000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="bgt-actual">Actual Expenditure (₹)</label>
+                            <input type="number" step="0.01" id="bgt-actual" value="0.00" placeholder="60000.00">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Budget</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetBudgetForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Zone ID</th>
+                        <th>Analytic Account</th>
+                        <th>Period</th>
+                        <th>Planned Amount (₹)</th>
+                        <th>Actual Amount (₹)</th>
+                        <th>Remaining (₹)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="budgets-tbody"></tbody>
+            </table>
+        </section>
+
+        <!-- 16. REPORTS TAB -->
+        <section id="tab-reports" class="tab-content">
+            <h2>Financial & Operations Reports</h2>
+            <div class="reports-container">
+
+                <div class="report-block">
+                    <h3>1. Profit & Loss Report</h3>
+                    <p class="report-desc">Calculates total pneumatic waste service revenue vs. operating maintenance expenses using JdbcTemplate.</p>
+                    <button class="btn btn-report" onclick="loadPnlReport()">Load Profit & Loss Report</button>
+
+                    <div id="pnl-results" class="report-results-card" style="display: none;">
+                        <h4>P&L Financial Results</h4>
+                        <div class="report-item">
+                            <span>Commercial Waste Service Revenue:</span>
+                            <strong id="pnl-revenue">₹0.00</strong>
+                        </div>
+                        <div class="report-item">
+                            <span>Total Operating Maintenance Expenses:</span>
+                            <strong id="pnl-expenses">₹0.00</strong>
+                        </div>
+                        <hr>
+                        <div class="report-item highlight-item">
+                            <span>Net Profit / (Loss):</span>
+                            <strong id="pnl-profit">₹0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-block" style="margin-top: 2rem;">
+                    <h3>2. Balance Sheet Summary</h3>
+                    <p class="report-desc">Summarizes open vendor bill liabilities and cash/bank balance using JdbcTemplate queries.</p>
+                    <button class="btn btn-report" onclick="loadBalanceSheetReport()">Load Balance Sheet Summary</button>
+
+                    <div id="bs-results" class="report-results-card" style="display: none;">
+                        <h4>Balance Sheet Summary Results</h4>
+                        <div class="report-item">
+                            <span>Open Vendor Liabilities (Unpaid Vendor Bills):</span>
+                            <strong id="bs-liabilities">₹0.00</strong>
+                        </div>
+                        <div class="report-item">
+                            <span>Total Bank & Cash Balance:</span>
+                            <strong id="bs-cash">₹0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <p>Urban Automated Underground Waste Pneumatic Transport Hub &copy; 2026 | College Expert Session Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
